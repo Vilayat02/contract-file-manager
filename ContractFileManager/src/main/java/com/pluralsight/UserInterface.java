@@ -20,10 +20,9 @@ public class UserInterface {
 
     public void display() {
         init();
-        int choice;
         boolean run = true;
         while (run) {
-            System.out.println("\nChoose an option:\n1-Find vehicles within a price range\n2-Find vehicles by make/model\n3-Find vehicles by year range\n4-Find vehicles by color\n5-Find vehicles by mileage range\n6-Find vehicles by type (car,truck,SUV,van)\n7-List ALL vehicles\n8-Add a vehicle\n9-Remove a vehicle\n99-Quit");
+            System.out.println("\nChoose an option:\n1-Find vehicles within a price range\n2-Find vehicles by make/model\n3-Find vehicles by year range\n4-Find vehicles by color\n5-Find vehicles by mileage range\n6-Find vehicles by type (car,truck,SUV,van)\n7-List ALL vehicles\n8-Add a vehicle\n9-Remove a vehicle\n10-Lease Contract\n11-SalesContract\n99-Quit");
             int choice1 = sc.nextInt();
             sc.nextLine();
             switch (choice1) {
@@ -53,6 +52,12 @@ public class UserInterface {
                     break;
                 case 9:
                 processRemoveVehicleRequest();
+                    break;
+                case 10:
+
+                    break;
+                case 11:
+                    processSalesContract();
                     break;
                 case 99:
                     run = false;
@@ -116,30 +121,53 @@ public class UserInterface {
             displayFormat(vehicles);
         }
         public void processAddVehicleRequest () {
-            System.out.print("Please enter vehicle data:\nVin: ");
-            int vin = sc.nextInt();
-            sc.nextLine();
-            System.out.print("Year: ");
-            int year = sc.nextInt();
-            sc.nextLine();
-            System.out.print("Make: ");
-            String make1 = sc.nextLine();
-            System.out.print("Model: ");
-            String model1 = sc.nextLine();
-            System.out.print("Vehicle Type (car,truck,SUV,van)");
-            String vehicleType = sc.nextLine();
-            System.out.print("Color: ");
-            String color1 = sc.nextLine();
-            System.out.print("Odometer: ");
-            int odo = sc.nextInt();
-            sc.nextLine();
-            System.out.print("Price: ");
-            double price = sc.nextDouble();
-            Vehicle vehicle = new Vehicle(vin, year, make1, model1, vehicleType, color1, odo, price);
-            dealership.addVehicle(vehicle);
+            dealership.addVehicle(processAddVehicleProcess());
             fileManager.saveDealership(dealership);
             System.out.println("Vehicle added succesfully!");
         }
+        public void processSalesContract(){
+            System.out.print("Please enter date (yearMonthDay like (20250515)): ");
+            String date = sc.nextLine();
+            System.out.print("Customer name: ");
+            String customerName = sc.nextLine();
+            System.out.print("Customer E-mail: ");
+            String customerEmail = sc.nextLine();
+            Vehicle veh = processAddVehicleProcess();
+            System.out.print("Is vehicle sold? 1.Yes  2.No : ");
+            int vehicleSold = sc.nextInt();
+            sc.nextLine();
+            boolean check1 = SalesContract.isVehicleSoldCheck(vehicleSold);
+            System.out.print("Finance needed? 1.Yes 2.No : ");
+            int financeNeeded = sc.nextInt();
+            sc.nextLine();
+            boolean check2 = SalesContract.isVehicleSoldCheck(financeNeeded);
+            SalesContract salesContract = new SalesContract(date, customerName, customerEmail, check1, check2);
+            ContractDataManager.saveContract(salesContract,veh);
+        }
+
+    public Vehicle processAddVehicleProcess () {
+        System.out.print("Please enter vehicle data:\nVin: ");
+        int vin = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Year: ");
+        int year = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Make: ");
+        String make1 = sc.nextLine();
+        System.out.print("Model: ");
+        String model1 = sc.nextLine();
+        System.out.print("Vehicle Type (car,truck,SUV,van): ");
+        String vehicleType = sc.nextLine();
+        System.out.print("Color: ");
+        String color1 = sc.nextLine();
+        System.out.print("Odometer: ");
+        int odo = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Price: ");
+        double price = sc.nextDouble();
+        return new Vehicle(vin, year, make1, model1, vehicleType, color1, odo, price);
+
+    }
 
         public void processRemoveVehicleRequest () {
             System.out.print("Enter VIN of the vehicle to remove: ");
